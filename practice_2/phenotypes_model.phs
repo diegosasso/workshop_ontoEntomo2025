@@ -1,0 +1,168 @@
+
+################################################################################
+#
+# This PhenoScript template can be used in activity 2.
+#
+# Author: Diego S. Porto
+# Last update: 18.nov.2025
+#
+################################################################################
+#
+# Instructions:
+# In this activity we are going to comparatively describe the phenotypes of three hypothetical organisms.
+# There are three groups with three organisms each. As an example, we will select group 3.
+# To make things easier, let us first write down our phenotype observations in natural language.
+# Here, I am interpreting the anatomy of these "animals" in my own way. You should do it your way as well!!!
+# Since these are all hypothetical organisms, there is no right/wrong way of describing them.
+# However, I am assuming here that these organisms are indeed similar to our true real animals, 
+# thus a good starting point is to check/use terms from the UBERON ontology. 
+#
+# Phenotype descriptions in natural language (group 3).
+#
+# Organism 1:
+# (1) Head, short.
+# (2) Eyes, present.
+# (3) Trunk, elongated.
+# (4) Flap at the postero-dorsal region of the trunk, present.
+# (5) Anterior appendage flattened.
+# (6) Posterior appendage undivided.
+#
+# Organism 2:
+# (1) Head, long.
+# (2) Eyes, absent.
+# (3) Trunk, shortened.
+# (4) Flap at the postero-dorsal region of the trunk, absent.
+# (5) Anterior appendage reduced.
+# (6) Posterior appendage undivided.
+#
+# Organism 3:
+# (1) Head, short.
+# (2) Eyes, present.
+# (3) Trunk, shortened.
+# (4) Flap at the postero-dorsal region of the trunk, absent.
+# (5) Anterior appendage cylindrical.
+# (6) Posterior appendage divided.
+#
+# Additionally, let us assume these are all adult organisms deposited in a collection ('COLLECTION'). 
+#
+# To write a simple statement in a semantic phenotype description we need to first select a term from an ontology,
+# then connect it to another term from another ontology via some property.
+# To select a term from an ontology, type down the prefix of the ontology followed by a hyphen, 
+# and then the term of interest, for example 'uberon-head'.
+# To select a property from an ontology, type down a dot followed by the prefix of the ontology 
+# followed by an hyphen and then the property of interest, for example '.ro-has_characteristic'
+#
+# In phenotype descriptions, some types of declarations are common, such as:
+# Type 1:
+# - 'anatomical entity 1' has part 'anatomical entity 2'; for example, "the head has a horn"
+# or its reverse:
+# - 'anatomical entity 2' is part of 'anatomical entity 1'; for example, "the finger is part of the hand"
+# 
+# Type 2:
+# - 'anatomical entity' has some characteristic; for example, "the leg is shortened"
+#
+# In such cases, PhenoScript provides some aliases (shortcuts):
+# Instead of typing '.bfo-has_part' one can just type '>'
+# Instead of typing '.bfo-part_of' one can just type '<'
+# Instead of typing '.ro-has_characteristic' one can just type '>>'
+#
+# Additionally, to indicate that a given entity is absent one can just use the operator '!'
+# For example, "uberon-trunk !> uberon-wing" to declare that wings are absent in the trunk.
+#
+# For more details on the PhenoScript syntax check: https://github.com/sergeitarasov/PhenoScript/wiki/Introduction-to-Phenoscript-Language
+
+#--------------------------------------------------#
+
+OTU = { #// ORGANISM 1
+  DATA = {
+    # This block contains all statements about the organism being described.
+    # Note: it is possible to add custom unique tags after declaring each term by typing something after ':', for example 'organism_1'.
+    uberon-multicellular_organism:organism_1[this = True, linksTraits = True, cls = 'uberon-adult_organism', cls = 'dwc-Preserved_Specimen'] .rdfs-label 'organism_1';
+    uberon-multicellular_organism:organism_1 .dwc-Catalog_Number 'COLLECTION_12345';
+    }
+
+  TRAITS = {
+    # This block contains all statements about the organism phenotypes.
+    # Note: when using 'this' the triple will make reference to 'uberon-multicellular_organism:organism_1'. 
+    # Here I am describing all phenotypes from the 'head'.
+    # (1) Head, short.    
+    this > uberon-head:hd001 >> pato-shortened;
+    # (2) Eyes, present.
+    this > uberon-eye:hd002;
+
+    # Here I am describing all phenotypes from the 'trunk'.
+    # (3) Trunk, elongated.
+    this > uberon-trunk:tk001 >> pato-elongated;
+    # (4) Flap at the postero-dorsal region of the trunk, present.
+    this > uberon-trunk:tk001 > bspo-postero-dorsal_region:tk002 > uberon-skin_flap:tk003;
+    # (5) Anterior appendage flattened.
+    this > uberon-forelimb:tk004 >> pato-flattened;
+    # (6) Posterior appendage undivided.
+    this > uberon-hindlimb:tk005 >> pato-undivided;
+    }
+
+}
+
+#--------------------------------------------------#
+
+OTU = { #// ORGANISM 2
+  DATA = {
+    # This block contains all statements about the organism being described.
+    # Note: it is possible to add custom unique tags after declaring each term by typing something after ':', for example 'organism_2'.
+    uberon-multicellular_organism:organism_2[this = True, linksTraits = True, cls = 'uberon-adult_organism', cls = 'dwc-Preserved_Specimen'] .rdfs-label 'organism_2';
+    uberon-multicellular_organism:organism_2 .dwc-Catalog_Number 'COLLECTION_23456';
+    }
+
+  TRAITS = {
+    # This block contains all statements about the organism phenotypes.
+    # Note: when using 'this' the triple will make reference to 'uberon-multicellular_organism:organism_2'. 
+    # Here I am describing all phenotypes from the 'head'.
+    # (1) Head, long.    
+    this > uberon-head:hd003 >> pato-elongated;
+    # (2) Eyes, present.
+    this !> uberon-eye:hd004;
+
+    # Here I am describing all phenotypes from the 'trunk'.
+    # (3) Trunk, shortened.
+    this > uberon-trunk:tk006 >> pato-shortened;
+    # (4) Flap at the postero-dorsal region of the trunk, present.
+    this > uberon-trunk:tk006 > bspo-postero-dorsal_region:tk007 !> uberon-skin_flap:tk008;
+    # (5) Anterior appendage reduced.
+    this > uberon-forelimb:tk009 >> pato-decreased_size;
+    # (6) Posterior appendage undivided.
+    this > uberon-hindlimb:tk010 >> pato-undivided;
+    }
+
+}
+
+#--------------------------------------------------#
+
+OTU = { #// ORGANISM 3
+  DATA = {
+    # This block contains all statements about the organism being described.
+    # Note: it is possible to add custom unique tags after declaring each term by typing something after ':', for example 'organism_3'.
+    uberon-multicellular_organism:organism_3[this = True, linksTraits = True, cls = 'uberon-adult_organism', cls = 'dwc-Preserved_Specimen'] .rdfs-label 'organism_3';
+    uberon-multicellular_organism:organism_3 .dwc-Catalog_Number 'COLLECTION_34567';
+    }
+
+  TRAITS = {
+    # This block contains all statements about the organism phenotypes.
+    # Note: when using 'this' the triple will make reference to 'uberon-multicellular_organism:organism_3'. 
+    # Here I am describing all phenotypes from the 'head'.
+    # (1) Head, short.    
+    this > uberon-head:hd005 >> pato-shortened;
+    # (2) Eyes, present.
+    this !> uberon-eye:hd006;
+
+    # Here I am describing all phenotypes from the 'trunk'.
+    # (3) Trunk, shortened.
+    this > uberon-trunk:tk011 >> pato-shortened;
+    # (4) Flap at the postero-dorsal region of the trunk, present.
+    this > uberon-trunk:tk011 > bspo-postero-dorsal_region:tk012 !> uberon-skin_flap:tk013;
+    # (5) Anterior appendage cylindrical.
+    this > uberon-forelimb:tk014 >> pato-cylindrical;
+    # (6) Posterior appendage divided.
+    this > uberon-hindlimb:tk015 >> pato-split;
+    }
+
+}
